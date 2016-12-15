@@ -519,6 +519,106 @@ pie(y)
 
 
 #########make pie charts
+####LW 12.13 starts here
+
+##make list of mismatch pollen records from herbaceous species
+herb.from.pollen<-mismatch.pollen2[mismatch.pollen2$growth=="herbaceous",]
+View(herb.from.pollen)
+################(1) using FEMALE VISITATION DATA, NOT all forest bee visitation##########
+###subset list for just those herbaceous species we didn't catch FEMALES off of
+herb.value.added<-herb.from.pollen[!herb.from.pollen$pollen %in% forest.visits.female,]
+View(herb.value.added)
+"fravir" %in% forest.visits.female
+"ducind" %in% forest.visits.female
+"ranfic" %in% forest.visits.female
+"cernut" %in% forest.visits.female
+"cersem" %in% forest.visits.female
+"allpet" %in% forest.visits.female
+"ajurep" %in% forest.visits.female
+"trolax" %in% forest.visits.female
+"saxpen" %in% forest.visits.female
+"ranbul" %in% forest.visits.female
+
+herb.speciesgroups<- c("ran", "aster", "brass","ranbul.ranabo", "ran.calpal", "ranfic.ranabo")
+herb.value.added2<-herb.value.added[!herb.value.added$pollen %in% herb.speciesgroups,]
+View(herb.value.added2)
+value.added.herbspecies <- unique(herb.value.added2$pollen)
+value.added.herbspecies
+
+##add this info to data frame pollen and visitation records for barplot
+growth4 <-{}
+for(i in newdf$plant){
+  if(! i %in% value.added.herbspecies){
+    growth4 <- c(growth4, newdf[newdf$plant == i,]$growth3[1])
+  }
+  else{
+    growth4<-c(growth4, "new.herb")
+  }
+  
+}
+newdf.nofemales <- newdf
+newdf.nofemales$growth4 <- growth4
+View(newdf.nofemales)
+
+##make barplot with new herb included
+growth.usage5<-table(newdf.nofemales$growth4, newdf.nofemales$data2)
+growth.usage5
+pollen2<-growth.usage5[,1]/colSums(growth.usage5)[1]
+visit2<-growth.usage5[,2]/colSums(growth.usage5)[2]
+growth.usage6<-cbind(pollen2,visit2)
+growth.usage6
+par(mfrow = c(1,2))
+barplot(growth.usage6, col = c("dark green" , "yellowgreen", "burlywood3", "gray","chocolate4", "dark green", "yellowgreen", "burlywood3", "gray", "chocolate4"), xlab = "Type of Data", ylab = "Frequency",  names.arg = c("Mismatch pollen", "Visitation"))
+#value added herbaceous pie chart
+newherb.nofemales.df<-newdf.nofemales[newdf.nofemales$growth4 == "new.herb" , ]
+newherb.nofemales.table<-table(newherb.nofemales.df$plant )
+pie(newherb.nofemales.table, col=c("plum", "yellow", "blue","orange","beige", "chocolate4","olivedrab","light blue"))
+
+#########(2) using ALL FOREST BEE VISITATION DATA to determine what plants we caught off of######
+###subset list for just those herbaceous species we didn't catch FEMALES off of
+herb.value.added.all<-herb.from.pollen[!herb.from.pollen$pollen %in% forest.visits,]
+View(herb.value.added.all)
+"fravir" %in% forest.visits
+"ducind" %in% forest.visits
+"ranfic" %in% forest.visits
+"cernut" %in% forest.visits
+"cersem" %in% forest.visits
+"ranbul" %in% forest.visits
+
+herb.speciesgroups<- c("ran", "cerastium", "aster", "brass","ranbul.ranabo", "ran.calpal", "ranfic.ranabo")
+herb.value.added.all2<-herb.value.added.all[!herb.value.added.all$pollen %in% herb.speciesgroups,]
+View(herb.value.added.all2)
+value.added.herbspecies.all <- unique(herb.value.added.all2$pollen)
+value.added.herbspecies.all
+
+##add this info to data frame pollen and visitation records for barplot
+growth5 <-{}
+for(i in newdf$plant){
+  if(! i %in% value.added.herbspecies.all){
+    growth5 <- c(growth5, newdf[newdf$plant == i,]$growth3[1])
+  }
+  else{
+    growth5<-c(growth5, "new.herb")
+  }
+  
+}
+newdf.allvisit <- newdf
+newdf.allvisit$growth5 <- growth5
+View(newdf.allvisit)
+
+##make barplot with new herb included
+growth.usage7<-table(newdf.allvisit$growth5, newdf.allvisit$data2)
+growth.usage7
+pollen3<-growth.usage7[,1]/colSums(growth.usage7)[1]
+visit3<-growth.usage7[,2]/colSums(growth.usage7)[2]
+growth.usage8<-cbind(pollen3,visit3)
+growth.usage8
+par(mfrow = c(1,2))
+barplot(growth.usage8, col = c("dark green" , "yellowgreen", "burlywood3", "gray","chocolate4", "dark green", "yellowgreen", "burlywood3", "gray", "chocolate4"), xlab = "Type of Data", ylab = "Frequency",  names.arg = c("Mismatch pollen", "Visitation"))
+#value added herbaceous pie chart
+newherb.allvisit.df<-newdf.allvisit[newdf.allvisit$growth5 == "new.herb" , ]
+newherb.allvisit.table<-table(newherb.allvisit.df$plant )
+pie(newherb.allvisit.table, col=c("plum", "seagreen","orange","beige", "chocolate4","olivedrab","light blue"))
 
 
 
